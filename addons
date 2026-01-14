@@ -1,0 +1,23 @@
+#!/bin/ruby
+
+require 'yaml'
+
+filename_base = "addons"
+filename_yaml = "#{filename_base}.yaml"
+filename_yml = "#{filename_base}.yml"
+
+filename =
+  if File.exist?(filename_yaml)
+    filename_yaml
+  elsif File.exist?(filename_yml)
+    filename_yml
+  else
+    nil
+  end
+
+if filename.nil?
+  puts "addons.yaml not found"
+  exit 1
+end
+
+puts YAML.safe_load_file(filename).inspect
