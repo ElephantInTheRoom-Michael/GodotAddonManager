@@ -1,6 +1,7 @@
 #!/bin/ruby
 
 require 'yaml'
+require 'tmpdir'
 
 filename_base = "addons"
 filename_yaml = "#{filename_base}.yaml"
@@ -20,4 +21,15 @@ if filename.nil?
   exit 1
 end
 
-puts YAML.safe_load_file(filename).inspect
+config = YAML.safe_load_file(filename)
+
+config.each do |name, addon_config|
+  puts "Checking addon #{name}"
+  Dir.mktmpdir do |dir|
+    Dir.chdir(dir) do
+      puts "Clone from #{addon_config['url']} into #{`pwd`}"
+      puts `git clone #{addon_config['url']} .`
+      puts `ls -la addons/#{name}`
+    end
+  end
+end
